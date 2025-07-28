@@ -1,0 +1,49 @@
+modules = ["python-3.11"]
+
+[nix]
+channel = "stable-25_05"
+packages = ["cargo", "glibcLocales", "libiconv", "libxcrypt", "libyaml", "openssl", "pkg-config", "rustc"]
+
+[workflows]
+runButton = "Project"
+
+[[workflows.workflow]]
+name = "Project"
+mode = "parallel"
+author = "agent"
+
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "Trading Bot"
+
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "trading_bot_setup"
+
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "Demo Bot"
+
+[[workflows.workflow]]
+name = "Trading Bot"
+author = "agent"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "pip install pandas numpy ta pyyaml python-binance requests && python main.py"
+
+[[workflows.workflow]]
+name = "trading_bot_setup"
+author = "agent"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "pip install pandas numpy ta python-binance pyyaml requests && python -m pytest tests/ -v"
+
+[[workflows.workflow]]
+name = "Demo Bot"
+author = "agent"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "python demo_bot.py"
